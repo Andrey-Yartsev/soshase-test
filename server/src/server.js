@@ -4,6 +4,7 @@ const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
 
 const routes = require('./routes/default');
+const db = require('./db');
 
 module.exports = async function () {
   let server = new Hapi.Server();
@@ -14,6 +15,8 @@ module.exports = async function () {
     }
   };
   server.connection({port: 8000});
+  const models = await db(server);
+  server.decorate('server', 'db', models);
   server.route(routes);
   server.register([
       Inert,
