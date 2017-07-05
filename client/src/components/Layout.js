@@ -3,7 +3,9 @@ import reduxConnect from '../utils/reduxConnect';
 import {Container, Row, Col, Nav, Navbar, NavItem, NavLink, NavbarBrand, Table, Button} from 'reactstrap';
 
 import {Modal, ModalHeader, ModalBody, ModalFooter, Pagination, PaginationItem, PaginationLink} from 'reactstrap';
-import CreateProductModalForm from './CreateProductModalForm';
+import {actions} from 'react-redux-form';
+
+import CreateProductModalForm from './ProductModalFormAbstract';
 
 import fetchProducts from '../actions/product/fetch';
 
@@ -54,7 +56,9 @@ class Layout extends React.Component {
         items.push(
           <PaginationItem key={page}>
             <PaginationLink
-            onClick={() => {this.clickPage(page)}}
+              onClick={() => {
+                this.clickPage(page)
+              }}
             >{page}</PaginationLink>
           </PaginationItem>
         );
@@ -63,6 +67,18 @@ class Layout extends React.Component {
     return <Pagination>
       {items}
     </Pagination>
+  }
+
+  clickProductEdit(id) {
+    for (let product of this.props.products.data.docs) {
+      if (product.id === id) {
+        this.context.store.dispatch(
+          actions.change('product.title', product.title)
+        );
+        this.toggleModalCreateProduct();
+        break;
+      }
+    }
   }
 
   renderProductRows() {
@@ -77,7 +93,9 @@ class Layout extends React.Component {
             <td>{item.price}</td>
             <td>
               <Button size="sm" color="danger">Удалить</Button>
-              <Button size="sm">Изменить</Button>
+              <Button size="sm" onClick={() => {
+                this.clickProductEdit(item.id)
+              }}>Изменить</Button>
             </td>
           </tr>
         );
@@ -124,7 +142,7 @@ class Layout extends React.Component {
               </tr>
               </thead>
               <tbody>
-                {this.renderProductRows()}
+              {this.renderProductRows()}
               </tbody>
             </Table>
           </Col>
