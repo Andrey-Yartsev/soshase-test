@@ -1,0 +1,17 @@
+{
+  "name": "soshase-test-server",
+  "version": "0.1.0",
+  "description": "## Requirements Node version 8+",
+  "main": "index.js",
+  "dependencies": {
+    "hapi": "^16.4.3",
+    "hapi-swagger": "^7.7.0",
+    "inert": "^4.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrey Yartsev",
+  "license": "ISC"
+}
