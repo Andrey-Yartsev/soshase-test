@@ -62,4 +62,31 @@ module.exports = [
       }
     }
   },
+  {
+    method: 'PUT',
+    path: '/api/v1/product/{id}',
+    handler: async (request, reply) => {
+      const result = await request.db.Product.update({
+        id: request.params.id
+      }, {
+        $set: request.payload
+      });
+      reply(result);
+    },
+    config: {
+      description: 'Delete product',
+      tags: ['api'],
+      validate: {
+        params: {
+          id: Joi.number(),
+        },
+        payload: {
+          title: Joi.string().required(),
+          buyPrice: Joi.number(),
+          price: Joi.number(),
+          category: Joi.string()
+        }
+      }
+    }
+  },
 ];
