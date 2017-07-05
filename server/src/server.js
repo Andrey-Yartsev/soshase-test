@@ -7,7 +7,7 @@ const routes = require('./routes/default');
 const db = require('./db');
 
 module.exports = async function () {
-  let server = new Hapi.Server();
+  let server = new Hapi.Server({debug: { 'request': ['error', 'uncaught'] }});
   const swaggerOptions = {
     info: {
       'title': 'Soshase Test',
