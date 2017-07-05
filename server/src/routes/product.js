@@ -74,7 +74,7 @@ module.exports = [
       reply(result);
     },
     config: {
-      description: 'Delete product',
+      description: 'Updates product',
       tags: ['api'],
       validate: {
         params: {

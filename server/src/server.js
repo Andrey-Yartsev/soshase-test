@@ -21,6 +21,7 @@ module.exports = async function () {
   // routes
   server.route(require('./routes/default'));
   server.route(require('./routes/product'));
+  server.route(require('./routes/category'));
   //
 
   server.register([
