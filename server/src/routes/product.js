@@ -42,5 +42,24 @@ module.exports = [
         }
       }
     }
-  }
+  },
+  {
+    method: 'DELETE',
+    path: '/api/v1/product/{id}',
+    handler: async (request, reply) => {
+      await request.db.Product.find({
+        id: request.params.id
+      }).remove().exec();
+      reply({status: 'success'});
+    },
+    config: {
+      description: 'Delete product',
+      tags: ['api'],
+      validate: {
+        params: {
+          id: Joi.number(),
+        }
+      }
+    }
+  },
 ];
