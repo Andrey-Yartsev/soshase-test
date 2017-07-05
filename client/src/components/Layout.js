@@ -5,42 +5,66 @@ import {Container, Row, Col, Nav, Navbar, NavItem, NavLink, NavbarBrand, Table, 
 import {Modal, ModalHeader, ModalBody, ModalFooter, Pagination, PaginationItem, PaginationLink} from 'reactstrap';
 import {actions} from 'react-redux-form';
 
-import CreateProductModalForm from './ProductModalFormAbstract';
+import ProductForm from './ProductForm';
 
 import fetchProducts from '../actions/product/fetch';
+import createProduct from '../actions/product/create';
+import updateProduct from '../actions/product/update';
 
 class Layout extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      modalCreateProduct: false
+      modalProduct: false
     };
-    this.toggleModalCreateProduct = this.toggleModalCreateProduct.bind(this);
-    this.clickPage = this.clickPage.bind(this)
+    this.toggleModalProduct = this.toggleModalProduct.bind(this);
+    this.clickPage = this.clickPage.bind(this);
+    this.createProduct = this.createProduct.bind(this);
+    this.updateProduct = this.updateProduct.bind(this);
   }
 
   componentDidMount() {
     fetchProducts(this.context.store.dispatch);
   }
 
-  toggleModalCreateProduct() {
+  toggleModalProduct() {
     this.setState({
-      modalCreateProduct: !this.state.modalCreateProduct
+      modalProduct: !this.state.modalProduct
     });
   }
 
-  createProduct() {
-    this.refs.createProductForm.submit();
+  createProduct(product) {
+    createProduct(
+      this.context.store.dispatch,
+      Object.assign({}, product)
+    );
+  }
+
+  updateProduct(product) {
+    updateProduct(
+      this.context.store.dispatch,
+      this.state.editProduct,
+      Object.assign({}, product)
+    );
   }
 
   renderCreateProductModal() {
-    return <Modal isOpen={this.state.modalCreateProduct} toggle={this.toggleModalCreateProduct}
+    let title, onSubmit;
+    if (this.state.editProduct) {
+      title = 'Редактирование товара';
+      onSubmit = this.updateProduct;
+    } else {
+      title = 'Создание товара';
+      onSubmit = this.createProduct;
+    }
+    return <Modal isOpen={this.state.modalProduct} toggle={this.toggleModalProduct}
                   className={this.props.className}>
       <ModalHeader
-        toggle={this.toggleModalCreateProduct}>Создание товара</ModalHeader>
-      <CreateProductModalForm
-        toggle={this.toggleModalCreateProduct}
+        toggle={this.toggleModalProduct}>{title}</ModalHeader>
+      <ProductForm
+        onSubmit={onSubmit}
+        toggle={this.toggleModalProduct}
       />
     </Modal>
   }
@@ -70,15 +94,25 @@ class Layout extends React.Component {
   }
 
   clickProductEdit(id) {
+    this.setState({
+      editProduct: id
+    });
     for (let product of this.props.products.data.docs) {
       if (product.id === id) {
         this.context.store.dispatch(
           actions.change('product.title', product.title)
         );
-        this.toggleModalCreateProduct();
+        this.toggleModalProduct();
         break;
       }
     }
+  }
+
+  clickCreateProduct() {
+    this.setState({
+      editProduct: false
+    });
+    this.toggleModalProduct();
   }
 
   renderProductRows() {
@@ -113,7 +147,7 @@ class Layout extends React.Component {
           <Nav className="ml-auto" navbar>
             <NavItem>
               <NavLink
-                onClick={this.toggleModalCreateProduct}
+                onClick={this.clickCreateProduct.bind(this)}
                 href="#">Добавить товар</NavLink>
             </NavItem>
             <NavItem>

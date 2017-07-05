@@ -11,6 +11,7 @@ import {
 class ProductForm extends React.Component {
 
   handleSubmit(product) {
+    this.props.onSubmit(product);
     this.props.toggle();
   }
 
@@ -23,15 +24,13 @@ class ProductForm extends React.Component {
         <ModalBody>
           <FormGroup>
             <Control.text
-              model="product.title"
-              id="product.title"
+              model=".title"
               validators={{
                 required: (val) => val && !!val.length
               }}
             />
             <Errors
               model="product.title"
-              wrapper={(props) => <Alert color="danger">{props.children}</Alert>}
               messages={{
                 required: 'Поле обязательно'
               }}
@@ -40,7 +39,7 @@ class ProductForm extends React.Component {
         </ModalBody>
         <ModalFooter>
           <Button>
-            Создать
+            Сохранить
           </Button>
         </ModalFooter>
       </Form>
