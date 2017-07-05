@@ -1,12 +1,13 @@
 import request from '../../utils/request';
 
-export default async (dispatch) => {
+export default async (dispatch, page) => {
+  if (!page) page = 1;
   const result = await request({
     method: 'get',
-    path: 'products'
+    path: 'products?page=' + page
   });
   dispatch({
-    action: 'SET_PRODUCTS',
+    type: 'SET_PRODUCTS',
     data: result.data
   });
 };

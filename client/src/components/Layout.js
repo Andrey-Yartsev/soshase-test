@@ -2,18 +2,26 @@ import React from 'react';
 import reduxConnect from '../utils/reduxConnect';
 import {Container, Row, Col, Nav, Navbar, NavItem, NavLink, NavbarBrand, Table, Button} from 'reactstrap';
 
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Modal, ModalHeader, ModalBody, ModalFooter, Pagination, PaginationItem, PaginationLink} from 'reactstrap';
 import CreateProductModalForm from './CreateProductModalForm';
+
+import fetchProducts from '../actions/product/fetch';
 
 class Layout extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      modalCreateProduct: true
+      modalCreateProduct: false
     };
     this.toggleModalCreateProduct = this.toggleModalCreateProduct.bind(this);
+    this.clickPage = this.clickPage.bind(this)
   }
+
+  componentDidMount() {
+    fetchProducts(this.context.store.dispatch);
+  }
+
   toggleModalCreateProduct() {
     this.setState({
       modalCreateProduct: !this.state.modalCreateProduct
@@ -25,13 +33,57 @@ class Layout extends React.Component {
   }
 
   renderCreateProductModal() {
-    return <Modal isOpen={this.state.modalCreateProduct} toggle={this.toggleModalCreateProduct} className={this.props.className}>
+    return <Modal isOpen={this.state.modalCreateProduct} toggle={this.toggleModalCreateProduct}
+                  className={this.props.className}>
       <ModalHeader
         toggle={this.toggleModalCreateProduct}>Создание товара</ModalHeader>
       <CreateProductModalForm
         toggle={this.toggleModalCreateProduct}
       />
     </Modal>
+  }
+
+  clickPage(page) {
+    fetchProducts(this.context.store.dispatch, page);
+  }
+
+  renderPagination() {
+    let items = [];
+    if (this.props.products.data && this.props.products.data.pages) {
+      for (let page = 1; page <= this.props.products.data.pages; page++) {
+        items.push(
+          <PaginationItem key={page}>
+            <PaginationLink
+            onClick={() => {this.clickPage(page)}}
+            >{page}</PaginationLink>
+          </PaginationItem>
+        );
+      }
+    }
+    return <Pagination>
+      {items}
+    </Pagination>
+  }
+
+  renderProductRows() {
+    let rows = [];
+    if (this.props.products.data && this.props.products.data.docs.length) {
+      for (let item of this.props.products.data.docs) {
+        rows.push(
+          <tr key={item.id}>
+            <th scope="row">{item.id}</th>
+            <td>{item.title}</td>
+            <td>{item.buyPrice}</td>
+            <td>{item.price}</td>
+            <td>
+              <Button size="sm" color="danger">Удалить</Button>
+              <Button size="sm">Изменить</Button>
+            </td>
+          </tr>
+        );
+      }
+    }
+    return rows;
   }
 
   render() {
@@ -60,6 +112,7 @@ class Layout extends React.Component {
             </Nav>
           </Col>
           <Col xs="8">
+            {this.renderPagination()}
             <Table>
               <thead>
               <tr>
@@ -71,16 +124,7 @@ class Layout extends React.Component {
               </tr>
               </thead>
               <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>
-                  <Button size="sm" color="danger">Удалить</Button>
-                  <Button size="sm">Изменить</Button>
-                </td>
-              </tr>
+                {this.renderProductRows()}
               </tbody>
             </Table>
           </Col>

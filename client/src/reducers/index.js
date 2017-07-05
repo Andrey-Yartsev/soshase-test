@@ -1,5 +1,5 @@
-import product from './product';
+import products from './product';
 
 export default {
-  product
+  products
 };
