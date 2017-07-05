@@ -3,7 +3,7 @@ const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
 
-const routes = require('./routes/default');
+
 const db = require('./db');
 
 module.exports = async function () {
@@ -16,8 +16,13 @@ module.exports = async function () {
   };
   server.connection({port: 8000});
   const models = await db(server);
-  server.decorate('server', 'db', models);
-  server.route(routes);
+  server.decorate('request', 'db', models);
+
+  // routes
+  server.route(require('./routes/default'));
+  server.route(require('./routes/product'));
+  //
+
   server.register([
       Inert,
       Vision,
