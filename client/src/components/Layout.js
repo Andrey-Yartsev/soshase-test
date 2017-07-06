@@ -231,6 +231,10 @@ class Layout extends React.Component {
         </div>);
       }
     }
+    items.push(<div key="">
+      <NavLink href="#" onClick={() => {this.clickPage(1)}}>Без категории</NavLink>
+    </div>);
+
     return items;
   }
 
