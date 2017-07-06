@@ -2,7 +2,7 @@ import request from '../../utils/request';
 import fetch from './fetch';
 
 export default async (store, id, data) => {
-  await request({
+  await request(store.getState().dispatch, {
     method: 'put',
     path: 'product/' + id,
     data: data

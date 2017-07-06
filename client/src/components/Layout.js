@@ -2,7 +2,16 @@ import React from 'react';
 import reduxConnect from '../utils/reduxConnect';
 import {Container, Row, Col, Nav, Navbar, NavItem, NavLink, NavbarBrand, Table, Button} from 'reactstrap';
 
-import {Modal, ModalHeader, ModalBody, ModalFooter, Pagination, PaginationItem, PaginationLink} from 'reactstrap';
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  Jumbotron
+} from 'reactstrap';
 import {actions} from 'react-redux-form';
 
 import ProductForm from './ProductForm';
@@ -253,13 +262,32 @@ class Layout extends React.Component {
       }
     }
     items.push(<div key="">
-      <NavLink href="#" onClick={() => {this.clickPage(1)}}>Без категории</NavLink>
+      <NavLink href="#" onClick={() => {
+        this.clickPage(1)
+      }}>Без категории</NavLink>
     </div>);
 
     return items;
   }
 
+  retryRequest() {
+    fetchAll(this.context.store.dispatch);
+  }
+
   render() {
+    if (this.props.connection.isAbsent) {
+      return <Container>
+        <Jumbotron>
+          <p>Нет соединения с интернетом</p>
+          <p className="lead"><Button color="primary" onClick={
+            () => {
+              this.retryRequest()
+            }
+          }>Повторить попытку</Button></p>
+        </Jumbotron>
+      </Container>;
+    }
+
     return (
       <Container>
         {this.renderProductModal()}
