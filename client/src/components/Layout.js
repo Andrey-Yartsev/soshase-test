@@ -20,6 +20,7 @@ import CategoryForm from './CategoryForm';
 import fetchAll from '../actions/fetchAll';
 import fetchProducts from '../actions/product/fetch';
 import createProduct from '../actions/product/create';
+import deleteProduct from '../actions/product/delete';
 import updateProduct from '../actions/product/update';
 import createCategory from '../actions/category/create';
 import deleteCategory from '../actions/category/delete';
@@ -132,7 +133,8 @@ class Layout extends React.Component {
           this.toggleModalCategoryDelete(false);
         }}>Удаление категории</ModalHeader>
       <ModalBody>
-        Уверены?
+        <p><b>Хотите удалить категорию?</b></p>
+        <p>Все товары в этой категории будут помечены "Без категории"</p>
       </ModalBody>
       <ModalFooter>
         <Button onClick={() => {
@@ -143,6 +145,13 @@ class Layout extends React.Component {
         }}>Нет</Button>
       </ModalFooter>
     </Modal>
+  }
+
+  deleteProduct(id) {
+    deleteProduct(
+      this.context.store.dispatch,
+      id
+    );
   }
 
   clickPage(page, category) {
@@ -221,7 +230,12 @@ class Layout extends React.Component {
             <td>{item.buyPrice}</td>
             <td>{item.price}</td>
             <td>
-              <Button size="sm" color="danger">Удалить</Button>{' '}
+              <Button
+                size="sm" color="danger"
+                onClick={() => {
+                  this.deleteProduct(item.id)
+                }}
+              >Удалить</Button>{' '}
               <Button size="sm" onClick={() => {
                 this.clickProductEdit(item.id)
               }}>Изменить</Button>
