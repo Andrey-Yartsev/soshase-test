@@ -27,9 +27,9 @@ class ProductForm extends React.Component {
     return <FormGroup>
       <Control.select
         model={'.' + name}
-        validators={{
-          required: (val) => val && !!val.length
-        }}
+        // validators={{
+        //   required: (val) => val && !!val.length
+        // }}
       >
         {options}
       </Control.select>
@@ -46,9 +46,6 @@ class ProductForm extends React.Component {
     return <FormGroup>
       <Control.text
         model={'.' + name}
-        validators={{
-          required: (val) => val && !!val.length
-        }}
       />
       <Errors
         model={'product.' + name}

@@ -160,8 +160,12 @@ class Layout extends React.Component {
     });
     for (let product of this.props.products.data.docs) {
       if (product.id === id) {
+        let _product = Object.assign({}, product);
+        delete _product._id;
+        delete _product.__v;
+        delete _product.id;
         this.context.store.dispatch(
-          actions.change('product.title', product.title)
+          actions.change('product', _product)
         );
         this.toggleModalProduct();
         break;
