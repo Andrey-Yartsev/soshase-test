@@ -3,11 +3,23 @@ const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
 const Cors = require('hapi-cors');
+const Path = require('path');
 
 const db = require('./db');
 
+console.log(Path.join(__dirname + '/../..', 'client/build'));
+
 module.exports = async function () {
-  let server = new Hapi.Server({debug: { 'request': ['error', 'uncaught'] }});
+  let server = new Hapi.Server({
+    debug: { 'request': ['error', 'uncaught'] },
+    connections: {
+      routes: {
+        files: {
+          relativeTo: Path.join(__dirname + '/../..', 'client/build')
+        }
+      }
+    }
+  });
   const swaggerOptions = {
     info: {
       'title': 'Soshase Test',
@@ -19,7 +31,6 @@ module.exports = async function () {
   server.decorate('request', 'db', models);
 
   // routes
-  server.route(require('./routes/default'));
   server.route(require('./routes/product'));
   server.route(require('./routes/category'));
   //
@@ -41,6 +52,17 @@ module.exports = async function () {
         'options': swaggerOptions
       }],
     (err) => {
+      server.route({
+        method: 'GET',
+        path: '/{param*}',
+        handler: {
+          directory: {
+            path: '.',
+            redirectToSlash: true,
+            index: true
+          }
+        }
+      });
       if (err) console.error('Error', err);
       server.start((serverErr) => {
         if (serverErr) {
