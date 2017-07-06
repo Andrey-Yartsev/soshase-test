@@ -1,11 +1,11 @@
 import request from '../../utils/request';
 import fetch from './fetch';
 
-export default async (dispatch, id, data) => {
+export default async (store, id, data) => {
   await request({
     method: 'put',
     path: 'product/' + id,
     data: data
   });
-  fetch(dispatch);
+  fetch(store.dispatch, store.getState().products.page);
 };

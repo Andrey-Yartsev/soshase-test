@@ -4,6 +4,10 @@ export default (state = {}, action) => {
       return Object.assign({}, state, {
         data: action.data
       });
+    case 'SET_PAGE':
+      return Object.assign({}, state, {
+        page: action.page
+      });
     default:
       return state;
   }

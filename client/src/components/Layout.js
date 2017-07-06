@@ -35,6 +35,10 @@ class Layout extends React.Component {
 
   componentDidMount() {
     fetchAll(this.context.store.dispatch);
+    this.context.store.dispatch({
+      type: 'SET_PAGE',
+      page: 1
+    });
   }
 
   toggleModalProduct() {
@@ -59,7 +63,7 @@ class Layout extends React.Component {
 
   updateProduct(product) {
     updateProduct(
-      this.context.store.dispatch,
+      this.context.store,
       this.state.editProduct,
       Object.assign({}, product)
     );
@@ -134,14 +138,19 @@ class Layout extends React.Component {
 
   clickPage(page, category) {
     fetchProducts(this.context.store.dispatch, page, category);
+    this.context.store.dispatch({
+      type: 'SET_PAGE',
+      page
+    });
   }
 
   renderPagination() {
     let items = [];
     if (this.props.products.data && this.props.products.data.pages) {
       for (let page = 1; page <= this.props.products.data.pages; page++) {
+        let active = this.props.products.page === page;
         items.push(
-          <PaginationItem key={page}>
+          <PaginationItem active={active} key={page}>
             <PaginationLink
               onClick={() => {
                 this.clickPage(page)
