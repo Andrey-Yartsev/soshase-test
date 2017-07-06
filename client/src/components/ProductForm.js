@@ -17,6 +17,7 @@ class ProductForm extends React.Component {
 
   renderCategoryField() {
     const name = 'category';
+    const label = 'Категория';
     let options = [];
     options.push(<option value="" key="">Выберите категорию</option>);
     if (this.props.categories.items) {
@@ -25,7 +26,9 @@ class ProductForm extends React.Component {
       }
     }
     return <FormGroup>
+      <Label>{label}</Label>
       <Control.select
+        className="form-control"
         model={'.' + name}
         // validators={{
         //   required: (val) => val && !!val.length
@@ -42,10 +45,12 @@ class ProductForm extends React.Component {
     </FormGroup>;
   }
 
-  renderField(name) {
+  renderField(name, label) {
     return <FormGroup>
+      <Label>{label}</Label>
       <Control.text
         model={'.' + name}
+        className="form-control"
       />
       <Errors
         model={'product.' + name}
@@ -64,9 +69,9 @@ class ProductForm extends React.Component {
       >
         <ModalBody>
           {this.renderCategoryField()}
-          {this.renderField('title')}
-          {this.renderField('buyPrice')}
-          {this.renderField('price')}
+          {this.renderField('title', 'Название')}
+          {this.renderField('buyPrice', 'Закупочная стоимость')}
+          {this.renderField('price', 'Розничная цена')}
         </ModalBody>
         <ModalFooter>
           <Button>

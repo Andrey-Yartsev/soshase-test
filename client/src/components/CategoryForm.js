@@ -23,7 +23,9 @@ class CategoryForm extends React.Component {
       >
         <ModalBody>
           <FormGroup>
+            <Label>Название</Label>
             <Control.text
+              className="form-control"
               model=".title"
               placeholder="Название"
               validators={{

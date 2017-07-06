@@ -15,6 +15,8 @@ import updateProduct from '../actions/product/update';
 import createCategory from '../actions/category/create';
 import deleteCategory from '../actions/category/delete';
 
+import '../static/css/custom.css';
+
 class Layout extends React.Component {
 
   constructor(props) {
@@ -195,7 +197,7 @@ class Layout extends React.Component {
             <td>{item.buyPrice}</td>
             <td>{item.price}</td>
             <td>
-              <Button size="sm" color="danger">Удалить</Button>
+              <Button size="sm" color="danger">Удалить</Button>{' '}
               <Button size="sm" onClick={() => {
                 this.clickProductEdit(item.id)
               }}>Изменить</Button>

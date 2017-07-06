@@ -1,0 +1,16 @@
+.navbar {
+    margin-bottom: 15px;
+}
+.col-3 > ul > div {
+    position: relative;
+}
+.col-3 .btn {
+    position: absolute;
+    top: 7px;
+}
+.col-3 .nav-link {
+    margin-left: 20px;
+}
+.btn, .page-link {
+    cursor: pointer;
+}
