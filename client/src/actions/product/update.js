@@ -7,5 +7,11 @@ export default async (store, id, data) => {
     path: 'product/' + id,
     data: data
   });
-  fetch(store.dispatch, store.getState().products.page);
+  const state = store.getState().products;
+  let category = state.category || false;
+  fetch(
+    store.dispatch,
+    state.page,
+    category
+  );
 };

@@ -8,6 +8,10 @@ export default (state = {}, action) => {
       return Object.assign({}, state, {
         page: action.page
       });
+    case 'SET_PAGE_CATEGORY':
+      return Object.assign({}, state, {
+        category: action.category
+      });
     default:
       return state;
   }

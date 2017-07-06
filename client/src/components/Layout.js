@@ -138,6 +138,12 @@ class Layout extends React.Component {
 
   clickPage(page, category) {
     fetchProducts(this.context.store.dispatch, page, category);
+    if (category) {
+      this.context.store.dispatch({
+        type: 'SET_PAGE_CATEGORY',
+        category
+      });
+    }
     this.context.store.dispatch({
       type: 'SET_PAGE',
       page
