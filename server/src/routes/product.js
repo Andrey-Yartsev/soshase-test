@@ -5,9 +5,7 @@ module.exports = [
     method: 'POST',
     path: '/api/v1/product',
     handler: async (request, reply) => {
-      const product = await request.db.Product.create({
-        title: request.payload.title
-      });
+      const product = await request.db.Product.create(request.payload);
       reply(product);
     },
     config: {

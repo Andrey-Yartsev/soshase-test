@@ -8,10 +8,10 @@ import {actions} from 'react-redux-form';
 import ProductForm from './ProductForm';
 import CategoryForm from './CategoryForm';
 
+import fetchAll from '../actions/fetchAll';
 import fetchProducts from '../actions/product/fetch';
 import createProduct from '../actions/product/create';
 import updateProduct from '../actions/product/update';
-import fetchCategories from '../actions/category/fetch';
 import createCategory from '../actions/category/create';
 import deleteCategory from '../actions/category/delete';
 
@@ -32,8 +32,7 @@ class Layout extends React.Component {
   }
 
   componentDidMount() {
-    fetchProducts(this.context.store.dispatch);
-    fetchCategories(this.context.store.dispatch);
+    fetchAll(this.context.store.dispatch);
   }
 
   toggleModalProduct() {
@@ -49,6 +48,7 @@ class Layout extends React.Component {
   }
 
   createProduct(product) {
+    console.log(product);
     createProduct(
       this.context.store.dispatch,
       Object.assign({}, product)
@@ -130,8 +130,8 @@ class Layout extends React.Component {
     </Modal>
   }
 
-  clickPage(page) {
-    fetchProducts(this.context.store.dispatch, page);
+  clickPage(page, category) {
+    fetchProducts(this.context.store.dispatch, page, category);
   }
 
   renderPagination() {
@@ -220,7 +220,14 @@ class Layout extends React.Component {
                   onClick={() => {
                     this.toggleModalCategoryDelete(item._id);
                   }}>X</Button>
-          <NavLink href="#">{item.title}</NavLink>
+          <NavLink
+            href="#"
+            onClick={
+              () => {
+                this.clickPage(1, item._id)
+              }
+            }
+          >{item.title}</NavLink>
         </div>);
       }
     }

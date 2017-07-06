@@ -6,7 +6,6 @@ export default async (dispatch, page) => {
     method: 'get',
     path: 'category'
   });
-  console.log(result.data);
   dispatch({
     type: 'SET_CATEGORIES',
     data: result.data
