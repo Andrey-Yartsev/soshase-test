@@ -13,6 +13,8 @@ const store = createStore(combineReducers(
   Object.assign(reducers, {
     product: modelReducer('product'),
     productForm: formReducer('product'),
+    category: modelReducer('category'),
+    categoryForm: formReducer('category'),
   })
 ), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 

@@ -6,19 +6,26 @@ import {Modal, ModalHeader, ModalBody, ModalFooter, Pagination, PaginationItem, 
 import {actions} from 'react-redux-form';
 
 import ProductForm from './ProductForm';
+import CategoryForm from './CategoryForm';
 
 import fetchProducts from '../actions/product/fetch';
 import createProduct from '../actions/product/create';
 import updateProduct from '../actions/product/update';
+import fetchCategories from '../actions/category/fetch';
+import createCategory from '../actions/category/create';
+import deleteCategory from '../actions/category/delete';
 
 class Layout extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      modalProduct: false
+      modalProduct: false,
+      modalCategory: false,
+      modalCategoryDelete: false
     };
     this.toggleModalProduct = this.toggleModalProduct.bind(this);
+    this.toggleModalCategory = this.toggleModalCategory.bind(this);
     this.clickPage = this.clickPage.bind(this);
     this.createProduct = this.createProduct.bind(this);
     this.updateProduct = this.updateProduct.bind(this);
@@ -26,11 +33,18 @@ class Layout extends React.Component {
 
   componentDidMount() {
     fetchProducts(this.context.store.dispatch);
+    fetchCategories(this.context.store.dispatch);
   }
 
   toggleModalProduct() {
     this.setState({
       modalProduct: !this.state.modalProduct
+    });
+  }
+
+  toggleModalCategory() {
+    this.setState({
+      modalCategory: !this.state.modalCategory
     });
   }
 
@@ -49,7 +63,7 @@ class Layout extends React.Component {
     );
   }
 
-  renderCreateProductModal() {
+  renderProductModal() {
     let title, onSubmit;
     if (this.state.editProduct) {
       title = 'Редактирование товара';
@@ -66,6 +80,53 @@ class Layout extends React.Component {
         onSubmit={onSubmit}
         toggle={this.toggleModalProduct}
       />
+    </Modal>
+  }
+
+  renderCategoryModal() {
+    let onSubmit = (data) => {
+      createCategory(
+        this.context.store.dispatch,
+        data.title
+      );
+    };
+    return <Modal isOpen={this.state.modalCategory} toggle={this.toggleModalCategory}
+                  className={this.props.className}>
+      <ModalHeader
+        toggle={this.toggleModalCategory}>Создание категории</ModalHeader>
+      <CategoryForm
+        onSubmit={onSubmit}
+        toggle={this.toggleModalCategory}
+      />
+    </Modal>
+  }
+
+  toggleModalCategoryDelete(id) {
+    this.setState({
+      modalCategoryDelete: id
+    });
+  }
+
+  renderCategoryDeleteModal() {
+    return <Modal
+      isOpen={!!this.state.modalCategoryDelete}
+      toggle={this.toggleModalCategoryDelete}
+    >
+      <ModalHeader
+        toggle={() => {
+          this.toggleModalCategoryDelete(false);
+        }}>Удаление категории</ModalHeader>
+      <ModalBody>
+        Уверены?
+      </ModalBody>
+      <ModalFooter>
+        <Button onClick={() => {
+          this.deleteCategory(this.state.modalCategoryDelete)
+        }}>Да</Button>
+        <Button onClick={() => {
+          this.toggleModalCategoryDelete(false);
+        }}>Нет</Button>
+      </ModalFooter>
     </Modal>
   }
 
@@ -115,6 +176,10 @@ class Layout extends React.Component {
     this.toggleModalProduct();
   }
 
+  clickCreateCategory() {
+    this.toggleModalCategory();
+  }
+
   renderProductRows() {
     let rows = [];
     if (this.props.products.data && this.props.products.data.docs.length) {
@@ -138,10 +203,36 @@ class Layout extends React.Component {
     return rows;
   }
 
+  deleteCategory(id) {
+    deleteCategory(
+      this.context.store.dispatch,
+      id
+    );
+    this.toggleModalCategoryDelete(false);
+  }
+
+  renderCategories() {
+    let items = [];
+    if (this.props.categories.items && this.props.categories.items.length) {
+      for (let item of this.props.categories.items) {
+        items.push(<div key={item._id}>
+          <Button size="sm" color="danger"
+                  onClick={() => {
+                    this.toggleModalCategoryDelete(item._id);
+                  }}>X</Button>
+          <NavLink href="#">{item.title}</NavLink>
+        </div>);
+      }
+    }
+    return items;
+  }
+
   render() {
     return (
       <Container>
-        {this.renderCreateProductModal()}
+        {this.renderProductModal()}
+        {this.renderCategoryModal()}
+        {this.renderCategoryDeleteModal()}
         <Navbar color="faded" light toggleable>
           <NavbarBrand href="/">Soshase Test</NavbarBrand>
           <Nav className="ml-auto" navbar>
@@ -151,16 +242,16 @@ class Layout extends React.Component {
                 href="#">Добавить товар</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/components/">Добавить категорию</NavLink>
+              <NavLink
+                onClick={this.clickCreateCategory.bind(this)}
+                href="#">Добавить категорию</NavLink>
             </NavItem>
           </Nav>
         </Navbar>
         <Row>
           <Col xs="3">
             <Nav vertical>
-              <NavLink href="#">Первая</NavLink>
-              <NavLink href="#">Вторая</NavLink>
-              <NavLink href="#">Третья</NavLink>
+              {this.renderCategories()}
             </Nav>
           </Col>
           <Col xs="8">

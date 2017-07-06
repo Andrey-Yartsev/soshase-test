@@ -4,10 +4,11 @@ export default async (dispatch, page) => {
   if (!page) page = 1;
   const result = await request({
     method: 'get',
-    path: 'products?page=' + page
+    path: 'category'
   });
+  console.log(result.data);
   dispatch({
-    type: 'SET_PRODUCTS',
+    type: 'SET_CATEGORIES',
     data: result.data
   });
 };
