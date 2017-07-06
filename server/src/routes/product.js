@@ -25,7 +25,11 @@ module.exports = [
     method: 'GET',
     path: '/api/v1/products',
     handler: async (request, reply) => {
-      const products = await request.db.Product.paginate({}, {
+      let filter = {};
+      if (request.query.category) {
+        filter.category = request.query.category;
+      }
+      const products = await request.db.Product.paginate(filter, {
         page: request.query.page || 1,
         limit: 5
       });
@@ -37,6 +41,7 @@ module.exports = [
       validate: {
         query: {
           page: Joi.number(),
+          category: Joi.string()
         }
       }
     }
